@@ -1,30 +1,72 @@
-
-const fetch = require('node-fetch');
-
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
+    
     const { url } = JSON.parse(event.body);
     if (!url || !url.includes('oasport.it')) {
         return { statusCode: 400, body: JSON.stringify({ error: 'Link non valido' }) };
     }
+    
     try {
         const response = await fetch(url);
         const html = await response.text();
+        
+        // ESTRATTORE MIGLIORATO
         const events = [];
-        const timeRegex = /(\d{2}:\d{2})\s+(.+?)(?=canale|tv|streaming|$)/gi;
-        let match;
-        while ((match = timeRegex.exec(html)) !== null) {
-            const time = match[1];
-            let title = match[2].trim().replace(/\s+/g, ' ').substring(0, 100);
-            if (title.length > 5) events.push({ time, title, channels: ['Canale non specificato'] });
+        
+        // Cerca qualsiasi orario nel formato HH:MM
+        const timeRegex = /\b([01][0-9]|2[0-3]):([0-5][0-9])\b/g;
+        const lines = html.split(/\n/);
+        
+        let currentEvent = null;
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            
+            // Cerca un orario valido
+            const timeMatch = line.match(/([01][0-9]|2[0-3]):([0-5][0-9])/);
+            if (timeMatch) {
+                const time = timeMatch[0];
+                // Prendi il testo dopo l'orario
+                let text = line.substring(line.indexOf(time) + time.length).trim();
+                
+                // Pulisci il testo (togli tag HTML, parentesi, ecc.)
+                text = text.replace(/<[^>]*>/g, '')           // toglie tag HTML
+                           .replace(/&nbsp;/g, ' ')            // toglie &nbsp;
+                           .replace(/\s+/g, ' ')               // normalizza spazi
+                           .trim();
+                
+                // Limita lunghezza e scarta rumore
+                if (text.length > 8 && text.length < 200 && !text.includes('0000') && !text.includes('cookie')) {
+                    events.push({
+                        time: time,
+                        title: text.substring(0, 100),
+                        channels: ['TV/Streaming']
+                    });
+                    currentEvent = null;
+                }
+            }
         }
+        
+        // Se non trova nulla, usa eventi di esempio con un messaggio chiaro
         if (events.length === 0) {
-            events.push({ time: "10:00", title: "Esempio evento", channels: ["Rai 1"] });
+            events.push(
+                { time: "08:00", title: "⚠️ Nessun evento trovato. Il formato della pagina OA Sport potrebbe essere cambiato.", channels: ["Controlla manualmente"] },
+                { time: "10:00", title: "Esempio: Come aggiungere eventi manualmente", channels: ["Apri il file HTML e modifica questa sezione"] }
+            );
         }
-        const finalHtml = generateHtml(events);
-        return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ html: finalHtml }) };
+        
+        // Limita a max 40 eventi (evita pagine troppo lunghe)
+        const finalEvents = events.slice(0, 40);
+        
+        const finalHtml = generateHtml(finalEvents);
+        return { 
+            statusCode: 200, 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ html: finalHtml }) 
+        };
+        
     } catch (err) {
         return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
     }
