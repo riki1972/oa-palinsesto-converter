@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📺 Convertitore Palinsesto OA Sport</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4f6e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 700px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 32px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        h1 { font-size: 1.5rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .sub { color: #6c757d; margin-bottom: 25px; border-left: 3px solid #1b6b8f; padding-left: 15px; font-size: 0.9rem; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+        }
+        button {
+            background: #1b6b8f;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 40px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .loading, .result, .error { margin-top: 20px; padding: 15px; border-radius: 16px; text-align: center; display: none; }
+        .loading { background: #f8f9fa; }
+        .result { background: #e8f5e9; }
+        .error { background: #ffebee; color: #c0392b; }
+        .result a { color: #1b6b8f; word-break: break-all; }
+        footer { text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>📺 Convertitore Palinsesto</h1>
+        <div class="sub">Incolla il link OA Sport di oggi → ottieni l'HTML pronto per Netlify</div>
+        
+        <label>🔗 Link OA Sport (es. https://www.oasport.it/2026/05/...)</label>
+        <input type="url" id="oaLink" placeholder="https://www.oasport.it/2026/05/..." />
+        
+        <button id="convertBtn">🔄 GENERA PALINSESTO HTML</button>
+        
+        <div id="loading" class="loading">⏳ Elaborazione in corso... attendi qualche secondo</div>
+        <div id="result" class="result">✅ HTML generato!<br><a id="downloadLink" href="#">📥 Clicca qui per scaricare il file</a></div>
+        <div id="error" class="error"></div>
+    </div>
+    <footer>Una volta scaricato il file, caricalo su <strong>Netlify Drop</strong></footer>
+</div>
+<script>
+    document.getElementById('convertBtn').onclick = async () => {
+        const oaLink = document.getElementById('oaLink').value.trim();
+        if (!oaLink) return alert('Inserisci il link');
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('error').style.display = 'none';
+        try {
+            const res = await fetch('/.netlify/functions/generate-palinsesto', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: oaLink })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+            const blob = new Blob([data.html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.getElementById('downloadLink');
+            link.href = url;
+            link.download = 'palinsesto.html';
+            document.getElementById('result').style.display = 'block';
+        } catch (err) {
+            document.getElementById('error').innerText = '❌ ' + err.message;
+            document.getElementById('error').style.display = 'block';
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    };
+</script>
+</body>
+</html>
