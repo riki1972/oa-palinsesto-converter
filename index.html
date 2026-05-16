@@ -1,99 +1,358 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📺 Convertitore Palinsesto OA Sport</title>
+    <title>📺 Palinsesto Sport – Sabato 16 Maggio 2026</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: system-ui, sans-serif;
-            background: linear-gradient(135deg, #0f2b3d 0%, #1b4f6e 100%);
-            min-height: 100vh;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
             padding: 20px;
+            color: #1a2c3e;
         }
-        .container { max-width: 700px; margin: 0 auto; }
-        .card {
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4f6e 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header h1 small {
+            font-size: 0.9rem;
+            font-weight: normal;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 30px;
+        }
+
+        .header p {
+            margin-top: 10px;
+            opacity: 0.85;
+            font-size: 0.9rem;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
             background: white;
-            border-radius: 32px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            align-items: center;
         }
-        h1 { font-size: 1.5rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .sub { color: #6c757d; margin-bottom: 25px; border-left: 3px solid #1b6b8f; padding-left: 15px; font-size: 0.9rem; }
-        label { font-weight: 600; display: block; margin-bottom: 8px; }
-        input {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 16px;
+
+        .filter-btn {
+            background: #e9ecef;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #2c5a7a;
         }
-        button {
+
+        .filter-btn.active {
             background: #1b6b8f;
             color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 40px;
-            width: 100%;
-            margin-top: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
-        .loading, .result, .error { margin-top: 20px; padding: 15px; border-radius: 16px; text-align: center; display: none; }
-        .loading { background: #f8f9fa; }
-        .result { background: #e8f5e9; }
-        .error { background: #ffebee; color: #c0392b; }
-        .result a { color: #1b6b8f; word-break: break-all; }
-        footer { text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 0.75rem; }
+
+        .filter-btn:hover {
+            background: #cbdde6;
+            transform: scale(0.96);
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 14px 20px;
+            transition: all 0.2s;
+            border-left: 5px solid #2c7da0;
+            gap: 10px;
+        }
+
+        .event-card.live-now {
+            background: #fffae6;
+            border-left-color: #e6a017;
+            box-shadow: 0 4px 12px rgba(230,160,23,0.15);
+        }
+
+        .time-block {
+            min-width: 95px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #1e4663;
+            background: #eef2f7;
+            padding: 5px 10px;
+            border-radius: 30px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .time-note {
+            font-size: 0.65rem;
+            font-weight: normal;
+            color: #e67e22;
+            display: block;
+        }
+
+        .sport-cat {
+            min-width: 100px;
+            font-weight: 600;
+            background: #eef2f5;
+            padding: 4px 10px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2c5a7a;
+        }
+
+        .event-title {
+            flex: 3;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        .channels {
+            flex: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .channel-badge {
+            background: #f4f6f9;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .streaming-badge {
+            background: #e8f0fe;
+            color: #1b6b8f;
+        }
+
+        @media (max-width: 850px) {
+            .event-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .time-block, .sport-cat, .event-title, .channels {
+                width: 100%;
+            }
+            .filters {
+                border-radius: 20px;
+                justify-content: center;
+            }
+        }
+
+        footer {
+            margin-top: 35px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #7f8c8d;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="card">
-        <h1>📺 Convertitore Palinsesto</h1>
-        <div class="sub">Incolla il link OA Sport di oggi → ottieni l'HTML pronto per Netlify</div>
-        
-        <label>🔗 Link OA Sport (es. https://www.oasport.it/2026/05/...)</label>
-        <input type="url" id="oaLink" placeholder="https://www.oasport.it/2026/05/..." />
-        
-        <button id="convertBtn">🔄 GENERA PALINSESTO HTML</button>
-        
-        <div id="loading" class="loading">⏳ Elaborazione in corso... attendi qualche secondo</div>
-        <div id="result" class="result">✅ HTML generato!<br><a id="downloadLink" href="#">📥 Clicca qui per scaricare il file</a></div>
-        <div id="error" class="error"></div>
+    <div class="header">
+        <h1>
+            📺 Sport in TV e Streaming
+            <small>Sabato 16 Maggio 2026</small>
+        </h1>
+        <p>🗓️ Palinsesto completo – clicca sui filtri per categoria. In giallo gli eventi in corso.</p>
     </div>
-    <footer>Una volta scaricato il file, caricalo su <strong>Netlify Drop</strong></footer>
+
+    <div class="filters" id="filterBar">
+        <button class="filter-btn active" data-cat="all">🏁 Tutti</button>
+        <button class="filter-btn" data-cat="Ciclismo">🚴 Ciclismo</button>
+        <button class="filter-btn" data-cat="Tennis">🎾 Tennis</button>
+        <button class="filter-btn" data-cat="Motori">🏎️ Motori</button>
+        <button class="filter-btn" data-cat="Calcio">⚽ Calcio</button>
+        <button class="filter-btn" data-cat="Altro">🏀 Altri sport</button>
+    </div>
+
+    <div class="timeline" id="timelineContainer"></div>
+    <footer>Fonte: OA Sport – orari e programmi. Gli orari sono italiani. I badge mostrano i canali TV e le piattaforme streaming.</footer>
 </div>
+
 <script>
-    document.getElementById('convertBtn').onclick = async () => {
-        const oaLink = document.getElementById('oaLink').value.trim();
-        if (!oaLink) return alert('Inserisci il link');
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('result').style.display = 'none';
-        document.getElementById('error').style.display = 'none';
-        try {
-            const res = await fetch('/.netlify/functions/generate-palinsesto', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: oaLink })
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error);
-            const blob = new Blob([data.html], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const link = document.getElementById('downloadLink');
-            link.href = url;
-            link.download = 'palinsesto.html';
-            document.getElementById('result').style.display = 'block';
-        } catch (err) {
-            document.getElementById('error').innerText = '❌ ' + err.message;
-            document.getElementById('error').style.display = 'block';
-        } finally {
-            document.getElementById('loading').style.display = 'none';
+    const events = [
+        { time: "03:00", sport: "Triathlon", title: "World Triathlon Championship Series – Gara femminile (Yokohama)", channels: ["📡 Triathlon Live Tv"], streaming: [], category: "Altro" },
+        { time: "04:00", sport: "Badminton", title: "China Masters", channels: ["📡 BWF Tv"], streaming: [], category: "Altro" },
+        { time: "05:45", sport: "Triathlon", title: "World Triathlon Championship Series – Gara maschile (Yokohama)", channels: ["📡 Triathlon Live Tv"], streaming: [], category: "Altro" },
+        { time: "07:30", sport: "Formula E", title: "GP Monaco – Prove libere 1", channels: [], streaming: ["🟢 Discovery+", "🟣 HBO Max"], category: "Motori" },
+        { time: "08:40", sport: "Moto3", title: "GP Catalogna – Prove libere 2", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
+        { time: "09:00", sport: "Canoa", title: "Coppa del Mondo – Brandeburgo", channels: [], streaming: ["🌊 Canoe Planet"], category: "Altro" },
+        { time: "09:25", sport: "Moto2", title: "GP Catalogna – Prove libere 2", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
+        { time: "10:10", sport: "MotoGP", title: "GP Catalogna – Prove libere 2", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
+        { time: "10:40", sport: "Formula E", title: "GP Monaco – Qualifiche", channels: [], streaming: ["🟢 Discovery+", "🟣 HBO Max"], category: "Motori" },
+        { time: "10:50", sport: "MotoGP", title: "GP Catalogna – Qualifiche", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP", "📺 TV8"], streaming: ["☁️ Sky Go", "▶️ NOW", "🌐 tv8.it"], category: "Motori" },
+        { time: "11:15", sport: "Superbike", title: "GP Cechia – Superpole", channels: ["🔵 Sky Sport Arena"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
+        { time: "13:00", sport: "Atletica", title: "Diamond League – Shanghai", channels: ["📡 RaiSportHD", "🔵 Sky Sport Arena"], streaming: ["📱 Rai Play", "☁️ Sky Go", "▶️ NOW"], category: "Altro" },
+        { time: "13:00", sport: "Tennis", title: "ATP Roma – Semifinale doppio maschile: Bolelli/Vavassori vs Harrison/Skupski", channels: ["📺 TV8", "🔵 Sky Sport Tennis"], streaming: ["🌐 tv8.it", "☁️ Sky Go", "▶️ NOW", "🎾 Tennis Tv"], category: "Tennis" },
+        { 
+            time: "13:00", 
+            sport: "Tennis", 
+            title: "🎾 ATP Roma – SEMIFINALE: Jannik Sinner vs Daniil Medvedev (ripresa dal 6-2, 5-7, 4-2, 40-A)", 
+            channels: ["🔵 Sky Sport Tennis", "📺 TV8"], 
+            streaming: ["☁️ Sky Go", "▶️ NOW", "🎾 Tennis Tv"],
+            category: "Tennis",
+            customTimeNote: "⚠️ non prima delle 15:00 (ripresa dal 4-2, terzo set)"
+        },
+        { time: "13:35", sport: "Ciclismo", title: "Giro d’Italia – Ottava tappa: Chieti-Fermo", channels: ["📺 Rai 2", "📡 Eurosport 1"], streaming: ["📱 Rai Play", "🟢 Discovery+", "🟣 HBO Max", "🎯 DAZN"], category: "Ciclismo" },
+        { time: "13:45", sport: "Rugby", title: "URC – Sharks-Zebre", channels: ["🔵 Sky Sport Max"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Altro" },
+        { time: "14:00", sport: "Superbike", title: "GP Cechia – Gara 1", channels: ["🔵 Sky Sport Uno"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
+        { time: "14:00", sport: "Golf", title: "PGA Championship – Terzo giro", channels: ["🔵 Sky Sport Golf"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Altro" },
+        { time: "15:00", sport: "MotoGP", title: "GP Catalogna – Sprint Race", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
+        { time: "15:00", sport: "Calcio", title: "Serie A femminile – Roma-Genoa", channels: ["📡 RaiSportHD"], streaming: ["📱 Rai Play", "🎯 DAZN"], category: "Calcio" },
+        { time: "15:05", sport: "Formula E", title: "GP Monaco – Gara", channels: ["📺 Italia 1"], streaming: ["📱 Mediaset Infinity", "🟢 Discovery+", "🟣 HBO Max", "🎯 DAZN"], category: "Motori" },
+        { time: "15:30", sport: "Calcio", title: "Bundesliga – Bayern Monaco-Colonia", channels: ["🔵 Sky Sport 251"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Calcio" },
+        { time: "16:00", sport: "Calcio", title: "FA Cup Finale – Chelsea vs Manchester City", channels: [], streaming: ["🟢 Discovery+", "🟣 HBO Max", "🎯 DAZN"], category: "Calcio" },
+        { time: "16:20", sport: "Hockey Ghiaccio", title: "Mondiali – Italia-Canada", channels: [], streaming: ["🏒 Sporteurope.tv"], category: "Altro" },
+        { time: "17:00", sport: "Volley", title: "Champions League – Semifinale: Perugia-PGE Projekt Varsavia", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport Arena"], streaming: ["☁️ Sky Go", "▶️ NOW", "🏐 Euro Volley Tv", "🎯 DAZN"], category: "Altro" },
+        { time: "17:00", sport: "Tennis", title: "WTA Roma – Finale: Gauff-Svitolina", channels: ["🔵 Sky Sport Tennis", "🎾 Super Tennis"], streaming: ["☁️ Sky Go", "▶️ NOW", "🌐 supertennis.tv"], category: "Tennis" },
+        { time: "18:30", sport: "Basket", title: "Playoff Serie A – Olimpia Milano-Reggio Emilia (Gara 1)", channels: ["🔵 Sky Sport Basket", "📺 Cielo"], streaming: ["☁️ Sky Go", "▶️ NOW", "🏀 LBA Tv"], category: "Altro" },
+        { time: "20:00", sport: "Calcio", title: "Serie B Playoff – Juve Stabia-Monza", channels: [], streaming: ["📦 Amazon Prime Video", "🎯 DAZN"], category: "Calcio" },
+        { time: "20:30", sport: "Calcio", title: "Supercoppa Italiana di Serie C – Vicenza-Benevento", channels: ["🔵 Sky Sport Uno", "📡 RaiSportHD"], streaming: ["☁️ Sky Go", "▶️ NOW", "📱 Rai Play"], category: "Calcio" },
+        { time: "20:30", sport: "Volley", title: "Champions League – Aluron Warta Zawiercie-Ziraat Ankara", channels: ["🔵 Sky Sport Arena"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Altro" }
+    ];
+
+    function renderTimeline(filterCategory = "all") {
+        const container = document.getElementById('timelineContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const now = new Date();
+        const currentHoursMinutes = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        
+        const filtered = events.filter(ev => {
+            if (filterCategory === "all") return true;
+            if (filterCategory === "Motori") return ev.category === "Motori";
+            if (filterCategory === "Altro") return ev.category === "Altro";
+            return ev.category === filterCategory;
+        });
+
+        filtered.sort((a,b) => a.time.localeCompare(b.time));
+
+        filtered.forEach(ev => {
+            let isLive = false;
+            const evTimeMinutes = parseInt(ev.time.split(':')[0])*60 + parseInt(ev.time.split(':')[1]);
+            const currentMinutes = parseInt(currentHoursMinutes.split(':')[0])*60 + parseInt(currentHoursMinutes.split(':')[1]);
+            if (evTimeMinutes <= currentMinutes && currentMinutes < (evTimeMinutes + 120)) {
+                isLive = true;
+            }
+
+            const card = document.createElement('div');
+            card.className = `event-card${isLive ? ' live-now' : ''}`;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'time-block';
+            timeDiv.innerHTML = ev.time;
+            if (ev.customTimeNote) {
+                const noteSpan = document.createElement('span');
+                noteSpan.className = 'time-note';
+                noteSpan.innerText = ev.customTimeNote;
+                timeDiv.appendChild(noteSpan);
+            }
+            
+            const sportDiv = document.createElement('div');
+            sportDiv.className = 'sport-cat';
+            sportDiv.innerText = ev.sport;
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'event-title';
+            titleDiv.innerHTML = ev.title;
+            
+            const channelsDiv = document.createElement('div');
+            channelsDiv.className = 'channels';
+            
+            if (ev.channels && ev.channels.length) {
+                ev.channels.forEach(ch => {
+                    const badge = document.createElement('span');
+                    badge.className = 'channel-badge';
+                    badge.innerHTML = ch;
+                    channelsDiv.appendChild(badge);
+                });
+            }
+            if (ev.streaming && ev.streaming.length) {
+                ev.streaming.forEach(stream => {
+                    const badge = document.createElement('span');
+                    badge.className = 'channel-badge streaming-badge';
+                    badge.innerHTML = stream;
+                    channelsDiv.appendChild(badge);
+                });
+            }
+            
+            card.appendChild(timeDiv);
+            card.appendChild(sportDiv);
+            card.appendChild(titleDiv);
+            card.appendChild(channelsDiv);
+            container.appendChild(card);
+        });
+        if(filtered.length === 0) {
+            container.innerHTML = '<div style="background: white; border-radius: 20px; padding: 40px; text-align: center;">Nessun evento per questa categoria. Prova un altro filtro 🎯</div>';
         }
-    };
+    }
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cat = btn.getAttribute('data-cat');
+            renderTimeline(cat);
+        });
+    });
+    
+    renderTimeline('all');
 </script>
 </body>
 </html>
