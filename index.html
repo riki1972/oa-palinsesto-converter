@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📺 Palinsesto Sport – Sabato 16 Maggio 2026</title>
+    <title>📺 Palinsesto Sport – Domenica 17 Maggio 2026</title>
     <style>
         * {
             margin: 0;
@@ -206,7 +206,7 @@
     <div class="header">
         <h1>
             📺 Sport in TV e Streaming
-            <small>Sabato 16 Maggio 2026</small>
+            <small>Domenica 17 Maggio 2026</small>
         </h1>
         <p>🗓️ Palinsesto completo – clicca sui filtri per categoria. In giallo gli eventi in corso.</p>
     </div>
@@ -221,51 +221,89 @@
     </div>
 
     <div class="timeline" id="timelineContainer"></div>
-    <footer>Fonte: OA Sport – orari e programmi. Gli orari sono italiani. I badge mostrano i canali TV e le piattaforme streaming.</footer>
+    <footer>Fonte: Virgilio Sport – Guida TV. Gli orari sono italiani. I badge mostrano i canali TV e le piattaforme streaming.</footer>
 </div>
 
 <script>
+    // Palinsesto del 17 maggio 2026 (basato su sport.virgilio.it)
     const events = [
-        { time: "03:00", sport: "Triathlon", title: "World Triathlon Championship Series – Gara femminile (Yokohama)", channels: ["📡 Triathlon Live Tv"], streaming: [], category: "Altro" },
-        { time: "04:00", sport: "Badminton", title: "China Masters", channels: ["📡 BWF Tv"], streaming: [], category: "Altro" },
-        { time: "05:45", sport: "Triathlon", title: "World Triathlon Championship Series – Gara maschile (Yokohama)", channels: ["📡 Triathlon Live Tv"], streaming: [], category: "Altro" },
-        { time: "07:30", sport: "Formula E", title: "GP Monaco – Prove libere 1", channels: [], streaming: ["🟢 Discovery+", "🟣 HBO Max"], category: "Motori" },
-        { time: "08:40", sport: "Moto3", title: "GP Catalogna – Prove libere 2", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
-        { time: "09:00", sport: "Canoa", title: "Coppa del Mondo – Brandeburgo", channels: [], streaming: ["🌊 Canoe Planet"], category: "Altro" },
-        { time: "09:25", sport: "Moto2", title: "GP Catalogna – Prove libere 2", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
-        { time: "10:10", sport: "MotoGP", title: "GP Catalogna – Prove libere 2", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
-        { time: "10:40", sport: "Formula E", title: "GP Monaco – Qualifiche", channels: [], streaming: ["🟢 Discovery+", "🟣 HBO Max"], category: "Motori" },
-        { time: "10:50", sport: "MotoGP", title: "GP Catalogna – Qualifiche", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP", "📺 TV8"], streaming: ["☁️ Sky Go", "▶️ NOW", "🌐 tv8.it"], category: "Motori" },
-        { time: "11:15", sport: "Superbike", title: "GP Cechia – Superpole", channels: ["🔵 Sky Sport Arena"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
-        { time: "13:00", sport: "Atletica", title: "Diamond League – Shanghai", channels: ["📡 RaiSportHD", "🔵 Sky Sport Arena"], streaming: ["📱 Rai Play", "☁️ Sky Go", "▶️ NOW"], category: "Altro" },
-        { time: "13:00", sport: "Tennis", title: "ATP Roma – Semifinale doppio maschile: Bolelli/Vavassori vs Harrison/Skupski", channels: ["📺 TV8", "🔵 Sky Sport Tennis"], streaming: ["🌐 tv8.it", "☁️ Sky Go", "▶️ NOW", "🎾 Tennis Tv"], category: "Tennis" },
-        { 
-            time: "13:00", 
-            sport: "Tennis", 
-            title: "🎾 ATP Roma – SEMIFINALE: Jannik Sinner vs Daniil Medvedev (ripresa dal 6-2, 5-7, 4-2, 40-A)", 
-            channels: ["🔵 Sky Sport Tennis", "📺 TV8"], 
-            streaming: ["☁️ Sky Go", "▶️ NOW", "🎾 Tennis Tv"],
-            category: "Tennis",
-            customTimeNote: "⚠️ non prima delle 15:00 (ripresa dal 4-2, terzo set)"
-        },
-        { time: "13:35", sport: "Ciclismo", title: "Giro d’Italia – Ottava tappa: Chieti-Fermo", channels: ["📺 Rai 2", "📡 Eurosport 1"], streaming: ["📱 Rai Play", "🟢 Discovery+", "🟣 HBO Max", "🎯 DAZN"], category: "Ciclismo" },
-        { time: "13:45", sport: "Rugby", title: "URC – Sharks-Zebre", channels: ["🔵 Sky Sport Max"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Altro" },
-        { time: "14:00", sport: "Superbike", title: "GP Cechia – Gara 1", channels: ["🔵 Sky Sport Uno"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
-        { time: "14:00", sport: "Golf", title: "PGA Championship – Terzo giro", channels: ["🔵 Sky Sport Golf"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Altro" },
-        { time: "15:00", sport: "MotoGP", title: "GP Catalogna – Sprint Race", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport MotoGP"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Motori" },
-        { time: "15:00", sport: "Calcio", title: "Serie A femminile – Roma-Genoa", channels: ["📡 RaiSportHD"], streaming: ["📱 Rai Play", "🎯 DAZN"], category: "Calcio" },
-        { time: "15:05", sport: "Formula E", title: "GP Monaco – Gara", channels: ["📺 Italia 1"], streaming: ["📱 Mediaset Infinity", "🟢 Discovery+", "🟣 HBO Max", "🎯 DAZN"], category: "Motori" },
-        { time: "15:30", sport: "Calcio", title: "Bundesliga – Bayern Monaco-Colonia", channels: ["🔵 Sky Sport 251"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Calcio" },
-        { time: "16:00", sport: "Calcio", title: "FA Cup Finale – Chelsea vs Manchester City", channels: [], streaming: ["🟢 Discovery+", "🟣 HBO Max", "🎯 DAZN"], category: "Calcio" },
-        { time: "16:20", sport: "Hockey Ghiaccio", title: "Mondiali – Italia-Canada", channels: [], streaming: ["🏒 Sporteurope.tv"], category: "Altro" },
-        { time: "17:00", sport: "Volley", title: "Champions League – Semifinale: Perugia-PGE Projekt Varsavia", channels: ["🔵 Sky Sport Uno", "🔵 Sky Sport Arena"], streaming: ["☁️ Sky Go", "▶️ NOW", "🏐 Euro Volley Tv", "🎯 DAZN"], category: "Altro" },
-        { time: "17:00", sport: "Tennis", title: "WTA Roma – Finale: Gauff-Svitolina", channels: ["🔵 Sky Sport Tennis", "🎾 Super Tennis"], streaming: ["☁️ Sky Go", "▶️ NOW", "🌐 supertennis.tv"], category: "Tennis" },
-        { time: "18:30", sport: "Basket", title: "Playoff Serie A – Olimpia Milano-Reggio Emilia (Gara 1)", channels: ["🔵 Sky Sport Basket", "📺 Cielo"], streaming: ["☁️ Sky Go", "▶️ NOW", "🏀 LBA Tv"], category: "Altro" },
-        { time: "20:00", sport: "Calcio", title: "Serie B Playoff – Juve Stabia-Monza", channels: [], streaming: ["📦 Amazon Prime Video", "🎯 DAZN"], category: "Calcio" },
-        { time: "20:30", sport: "Calcio", title: "Supercoppa Italiana di Serie C – Vicenza-Benevento", channels: ["🔵 Sky Sport Uno", "📡 RaiSportHD"], streaming: ["☁️ Sky Go", "▶️ NOW", "📱 Rai Play"], category: "Calcio" },
-        { time: "20:30", sport: "Volley", title: "Champions League – Aluron Warta Zawiercie-Ziraat Ankara", channels: ["🔵 Sky Sport Arena"], streaming: ["☁️ Sky Go", "▶️ NOW"], category: "Altro" }
+        // Atletica
+        { time: "08:00", sport: "Atletica", title: "World Athletics Continental Tour Gold – Tokyo", channels: ["Sky Sport Arena"], category: "Altro" },
+        // Moto3
+        { time: "11:00", sport: "Moto3", title: "GP Catalunya", channels: ["Sky Sport MotoGP", "Sky Sport 1"], category: "Motori" },
+        // Superbike
+        { time: "11:10", sport: "Superbike", title: "GP Repubblica Ceca", channels: ["Sky Sport Arena"], category: "Motori" },
+        // Calcio (ore 12:00, partite multiple)
+        { time: "12:00", sport: "Calcio", title: "Serie A – Como vs Parma", channels: ["Sky", "DAZN"], category: "Calcio" },
+        { time: "12:00", sport: "Calcio", title: "Serie A – Genoa vs Milan", channels: ["DAZN"], category: "Calcio" },
+        { time: "12:00", sport: "Calcio", title: "Serie A – Juventus vs Fiorentina", channels: ["Sky", "DAZN", "Sky Sport Calcio"], category: "Calcio" },
+        { time: "12:00", sport: "Calcio", title: "Serie A – Pisa vs Napoli", channels: ["DAZN"], category: "Calcio" },
+        { time: "12:00", sport: "Calcio", title: "Serie A – Roma vs Lazio", channels: ["DAZN"], category: "Calcio" },
+        // Tennis WTA Finale Doppio
+        { time: "12:00", sport: "Tennis", title: "WTA 1000 Roma – Finale Doppio", channels: ["Sky Sport Tennis"], category: "Tennis" },
+        // Moto2
+        { time: "12:15", sport: "Moto2", title: "GP Catalunya", channels: ["Sky Sport MotoGP", "Sky Sport 1"], category: "Motori" },
+        // Ciclismo Giro (Eurosport)
+        { time: "12:30", sport: "Ciclismo", title: "Giro d’Italia – 9ª tappa: Cervia-Corno alle Scale", channels: ["Eurosport"], streaming: ["Discovery+", "HBO Max"], category: "Ciclismo" },
+        // Rugby femminile
+        { time: "13:15", sport: "Rugby", title: "Sei Nazioni femminile – Galles vs Italia", channels: ["Sky Sport Max"], category: "Altro" },
+        // Ciclismo Giro (Rai 2)
+        { time: "14:00", sport: "Ciclismo", title: "Giro d’Italia – 9ª tappa: Cervia-Corno alle Scale", channels: ["Rai 2"], streaming: ["Rai Play"], category: "Ciclismo" },
+        // MotoGP
+        { time: "14:00", sport: "MotoGP", title: "GP Catalunya", channels: ["Sky Sport MotoGP", "Sky Sport 1"], category: "Motori" },
+        // Tennis ATP Finale Doppio
+        { time: "14:00", sport: "Tennis", title: "ATP 1000 Roma – Finale Doppio", channels: ["Sky Sport Tennis"], category: "Tennis" },
+        // Calcio Inter-Verona
+        { time: "15:00", sport: "Calcio", title: "Serie A – Inter vs Verona", channels: ["DAZN"], category: "Calcio" },
+        // Superbike gara 2
+        { time: "15:30", sport: "Superbike", title: "GP Repubblica Ceca (Gara 2)", channels: ["Sky Sport 1", "Cielo", "Sky Sport Arena"], category: "Motori" },
+        // Rugby Irlanda-Scozia
+        { time: "15:30", sport: "Rugby", title: "Sei Nazioni femminile – Irlanda vs Scozia", channels: ["Sky Sport Mix"], category: "Altro" },
+        // Diretta Gol Premier League
+        { time: "16:00", sport: "Calcio", title: "Diretta Gol Premier League", channels: ["Sky Sport Calcio"], category: "Calcio" },
+        // Pallavolo finale 3°/4° posto
+        { time: "17:00", sport: "Pallavolo", title: "CEV Champions League maschile – Finale 3°/4° posto", channels: ["Sky Sport Arena"], category: "Altro" },
+        // Tennis ATP Finale Singolare
+        { time: "17:00", sport: "Tennis", title: "ATP 1000 Roma – Finale Singolare", channels: ["Sky Sport 1", "Sky Sport Tennis", "TV8"], streaming: ["NOW", "Sky Go"], category: "Tennis" },
+        // Rugby Francia-Inghilterra
+        { time: "17:45", sport: "Rugby", title: "Sei Nazioni femminile – Francia vs Inghilterra", channels: ["Sky Sport Max"], category: "Altro" },
+        // Calcio Atalanta-Bologna
+        { time: "18:00", sport: "Calcio", title: "Serie A – Atalanta vs Bologna", channels: ["DAZN"], category: "Calcio" },
+        // Pallamano Italia-Svizzera
+        { time: "18:00", sport: "Pallamano", title: "Qualificazioni Mondiali 2027 – Italia vs Svizzera", channels: ["Sky Sport Mix"], category: "Altro" },
+        // Premier League Newcastle-West Ham
+        { time: "18:30", sport: "Calcio", title: "Premier League – Newcastle vs West Ham", channels: ["Sky Sport Calcio"], category: "Calcio" },
+        // Basket Venezia-Tortona
+        { time: "20:00", sport: "Basket", title: "Serie A – Venezia vs Tortona", channels: ["Sky Sport Basket"], category: "Altro" },
+        // Pallavolo finale CEV
+        { time: "20:30", sport: "Pallavolo", title: "CEV Champions League maschile – Finale", channels: ["Sky Sport 1", "Sky Sport Arena"], category: "Altro" },
+        // Calcio Cagliari-Torino
+        { time: "20:45", sport: "Calcio", title: "Serie A – Cagliari vs Torino", channels: ["DAZN"], category: "Calcio" },
+        // Calcio Sassuolo-Lecce
+        { time: "20:45", sport: "Calcio", title: "Serie A – Sassuolo vs Lecce", channels: ["Sky", "DAZN", "Sky Sport Calcio"], category: "Calcio" },
+        // Calcio Udinese-Cremonese
+        { time: "20:45", sport: "Calcio", title: "Serie A – Udinese vs Cremonese", channels: ["DAZN"], category: "Calcio" },
+        // Rugby Top 14
+        { time: "21:05", sport: "Rugby", title: "Top 14 – Stade Rochelais vs Tolosa", channels: ["Sky Sport Max"], category: "Altro" }
     ];
 
+    // Determina la categoria di ogni evento in base al titolo (se non già specificata)
+    function getCategory(sport, title) {
+        const t = (sport + " " + title).toLowerCase();
+        if (t.includes('moto') || t.includes('superbike') || t.includes('motogp')) return 'Motori';
+        if (t.includes('calcio') || t.includes('serie a') || t.includes('premier league')) return 'Calcio';
+        if (t.includes('ciclismo') || t.includes('giro')) return 'Ciclismo';
+        if (t.includes('tennis')) return 'Tennis';
+        return 'Altro';
+    }
+
+    // Aggiunge la categoria a ogni evento
+    const eventsWithCat = events.map(ev => ({
+        ...ev,
+        category: ev.category || getCategory(ev.sport, ev.title)
+    }));
+
+    // Funzione per mostrare/ordinare/filtrare gli eventi
     function renderTimeline(filterCategory = "all") {
         const container = document.getElementById('timelineContainer');
         if (!container) return;
@@ -273,8 +311,8 @@
 
         const now = new Date();
         const currentHoursMinutes = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        
-        const filtered = events.filter(ev => {
+
+        const filtered = eventsWithCat.filter(ev => {
             if (filterCategory === "all") return true;
             if (filterCategory === "Motori") return ev.category === "Motori";
             if (filterCategory === "Altro") return ev.category === "Altro";
@@ -293,7 +331,7 @@
 
             const card = document.createElement('div');
             card.className = `event-card${isLive ? ' live-now' : ''}`;
-            
+
             const timeDiv = document.createElement('div');
             timeDiv.className = 'time-block';
             timeDiv.innerHTML = ev.time;
@@ -303,18 +341,18 @@
                 noteSpan.innerText = ev.customTimeNote;
                 timeDiv.appendChild(noteSpan);
             }
-            
+
             const sportDiv = document.createElement('div');
             sportDiv.className = 'sport-cat';
             sportDiv.innerText = ev.sport;
-            
+
             const titleDiv = document.createElement('div');
             titleDiv.className = 'event-title';
             titleDiv.innerHTML = ev.title;
-            
+
             const channelsDiv = document.createElement('div');
             channelsDiv.className = 'channels';
-            
+
             if (ev.channels && ev.channels.length) {
                 ev.channels.forEach(ch => {
                     const badge = document.createElement('span');
@@ -331,18 +369,20 @@
                     channelsDiv.appendChild(badge);
                 });
             }
-            
+
             card.appendChild(timeDiv);
             card.appendChild(sportDiv);
             card.appendChild(titleDiv);
             card.appendChild(channelsDiv);
             container.appendChild(card);
         });
-        if(filtered.length === 0) {
+
+        if (filtered.length === 0) {
             container.innerHTML = '<div style="background: white; border-radius: 20px; padding: 40px; text-align: center;">Nessun evento per questa categoria. Prova un altro filtro 🎯</div>';
         }
     }
-    
+
+    // Pulsanti filtro
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -351,7 +391,7 @@
             renderTimeline(cat);
         });
     });
-    
+
     renderTimeline('all');
 </script>
 </body>
